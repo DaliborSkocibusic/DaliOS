@@ -1,7 +1,7 @@
 # DaliOS
 My Attempt at coding an OS based on the course - Udemy Developing a Multithreaded Kernel From Scratch!
 
-Note this is GPL as per the original author Daniel 
+Note this is GPL as per the original author Daniel McCarthy
 
 https://github.com/nibblebits/PeachOS
 
