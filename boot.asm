@@ -1,10 +1,30 @@
 ; The BIOS will load the program into address Ox7C00
-ORG 0x7c00  ; Specify this as the start point of the asm program
+ORG 0         ; Specify this as the start point of the asm program. 0 Now
             ; The origin should be 0 and we should jump ideally
 BITS 16     ; Tells the assembler to only assemble 16 bit code
+            ; Dont forget this starts in real mode
+            ; That means only 1MB of RAM, no security max 16 bit address space
+            ; Real mode has to be 16 bits
 
+jmp 0x7c0:start ; Sets code segment to 7c0
 
 start:      ; This is a label, this is where our program starts
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+; Section below modifies the code so that all the registers are set manually
+; As opposed to expecing BIOS to do it for us. 
+    cli     ; Clear interrupt flags disables hardware interrupts
+    mov ax, 0x7c0        ; Necessary when setting registers
+    mov ds, ax            ; Put ax into ds
+    mov es, ax            ; put ax into es
+
+    mov ax, 0x00            ; set stack segment to 00
+    mov ss, ax                    
+    mov sp, 0x7c00          ; set the stack pointer to the highest memry location
+
+
+    sti     ; Set interupts / Enables interrupts
+    ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
     mov si, message
     call print
     jmp $       ; Jump to the same spot. Inf loop
