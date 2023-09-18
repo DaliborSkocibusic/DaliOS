@@ -16,3 +16,5 @@ If you want to clone / fork, you are much better off doing so from the PeachOS l
 I more then likely will make many mistakes.
 
 Please support Daniel if you can, the course is amazing and Daniel realy knows OS / Kernel development
+
+Modify
