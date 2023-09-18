@@ -6,13 +6,23 @@ BITS 16     ; Tells the assembler to only assemble 16 bit code
             ; That means only 1MB of RAM, no security max 16 bit address space
             ; Real mode has to be 16 bits
 
-jmp 0x7c0:start ; Sets code segment to 7c0
+;;;;;;;;;;;;;;;;;;;
+; Code below is to give space for the code that is overwritten when booting from usb
+; Data in that section must not be important asit will be overwritten by BIOS
+_start: ; leaves 3 bytes for BIOS when loading from USB
+    jmp short start
+    nop
+
+times 33 db 0 ;; Fills in 33 null bytes after short start
+
 
 start:      ; This is a label, this is where our program starts
 
+    jmp 0x7c0:step2 ; Sets code segment to 7c0
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Section below modifies the code so that all the registers are set manually
 ; As opposed to expecing BIOS to do it for us. 
+step2:
     cli     ; Clear interrupt flags disables hardware interrupts
     mov ax, 0x7c0        ; Necessary when setting registers
     mov ds, ax            ; Put ax into ds
