@@ -22,6 +22,32 @@ start:      ; This is a label, this is where our program starts
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ; Section below modifies the code so that all the registers are set manually
 ; As opposed to expecing BIOS to do it for us. 
+
+
+;; Interrupt handler
+;; This is us changing the interrupt vector table
+;; Our interrupts will start at 0 aka the Orgin
+handle_zero: ; This will be called when someone does int 0
+    mov ah, 0eh
+    mov al, 'A'
+    mov bx, 0x00
+    int 0x10
+    iret
+
+;; To assemble nasm -f bin ./boot.asm -o ./boot.bin
+;; To run qemu-system-x86_64 -hda ./boot.bin 
+
+;; From 13. Implementing our own interrupts in real mode
+handle_one:
+    mov ah, 0eh
+    mov al, 'V'
+    mov bx, 0x00
+    int 0x10
+    iret
+;; From 13. Implementing our own interrupts in real mode
+
+
+
 step2:
     cli     ; Clear interrupt flags disables hardware interrupts
     mov ax, 0x7c0        ; Necessary when setting registers
@@ -31,10 +57,27 @@ step2:
     mov ax, 0x00            ; set stack segment to 00
     mov ss, ax                    
     mov sp, 0x7c00          ; set the stack pointer to the highest memry location
-
-
     sti     ; Set interupts / Enables interrupts
     ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+    ;;; This is us doing something regaring calling it in the irt...
+    mov word[ss:0x00], handle_zero ; This is specifying that we are going to be using ss as the stack pointer reg 
+    ;;; Might not actually be the stack pointer, whatever the pointer is being used when we run code
+    ;; if we dont use ss it will use ds which points currently to 0x7c0...
+    mov word[ss:0x02], 0x7c0 ; 
+
+    mov word[ss:0x04], handle_one ; Moving handle one into the interrupt vector table
+    mov word[ss:0x06], 0x7c0 ; this is interrupt 1
+    ;; int 0 ; Now we will call the interrupt. Obs dont want this here this is just for test. 
+    ;; From 13. Implementing our own interrupts in real mode
+    ;; When int 0 i scalled A is pritnerd to screen. 
+
+    int 1 ; We are calling interrupt 1. This will print v for now
+
+    ;; From 13. Implementing our own interrupts in real mode
+    ;mov ax, 0x00
+    ;div ax ;; This makes a div by 0 error i.e. the interrupt is called. 
+
     mov si, message
     call print
     jmp $       ; Jump to the same spot. Inf loop
