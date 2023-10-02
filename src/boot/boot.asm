@@ -104,6 +104,12 @@ load32:
     ;; Setting all the registers to start from the data seg in memeory
     mov ebp, 0x00200000 ;; ebp now were in 32 bit i.e. 4 byte or 00 20 00 00
     mov esp, ebp
+
+    ; Enable A20 Line: https://wiki.osdev.org/A20_Line
+    in al, 0x92
+    or al, 2
+    out 0x92, al
+
     jmp $
 
 times 510- ($ - $$) db 0 ; This fills the first 510 bytes with 0 or the content to make a sector

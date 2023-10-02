@@ -27,3 +27,5 @@ https://github.com/DaliborSkocibusic/DaliOS/tree/e6bfdde4d758918e9d136fdd11c2999
 
 Loads protected mode: 93f3fc81b163062e4c3f2ae5e293efe707a5d04e
 https://github.com/DaliborSkocibusic/DaliOS/tree/93f3fc81b163062e4c3f2ae5e293efe707a5d04e
+
+Loads A20 line: 
