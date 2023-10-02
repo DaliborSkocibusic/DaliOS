@@ -93,24 +93,70 @@ gdt_descriptor:
     dw gdt_end - gdt_start - 1 ;; This is the size
     dd gdt_start               ;; This is the offset
 
-[BITS 32] ;; Tesl the asm this is 32 bit code
+[BITS 32]
 load32:
-    mov ax, DATA_SEG
-    mov ds, ax
-    mov es, ax
-    mov fs, ax
-    mov gs, ax
-    mov ss, ax
-    ;; Setting all the registers to start from the data seg in memeory
-    mov ebp, 0x00200000 ;; ebp now were in 32 bit i.e. 4 byte or 00 20 00 00
-    mov esp, ebp
+    mov eax, 1         ; Sector want to load from. 0 is boot sector
+    mov ecx, 100       ; 
+    mov edi, 0x0100000 ; Should be 1MB
+    call ata_lba_read
+    jmp CODE_SEG:0x0100000
 
-    ; Enable A20 Line: https://wiki.osdev.org/A20_Line
-    in al, 0x92
-    or al, 2
-    out 0x92, al
+ata_lba_read:          ; Driver that talks to the motherboard
+    mov ebx, eax       ; Backup LBA for later
+    shr eax, 24        ; Shift to get the top 8 bits
+    or eax, 0xE0       ; Selects the master drive
+    mov dx, 0x1F6      ; 
+    out dx, al         ; Finsied sending the top 8 bits of lba
 
-    jmp $
+    ; Send the toal sectors to be read
+    mov eax, ecx       
+    mov dx, 0x1F2
+    out dx, al
+    ; Finished sending the total sectors to be read
+
+    ; Send more bits of the LBA
+    mov eax, ebx      ; Restore LBA from backup
+    mov dx, 0x1F3
+    out dx, al; 
+    ; Finished sending more bits of the LBA
+
+    ; Send more bits of the LBA
+    mov dx, 0x1F4
+    mov eax, ebx ; Restore each time
+    shr eax, 8
+    out dx, al
+    ; Finished sending more bits of the LBA
+
+    ; Send upper 16 bits of LBA
+    mov dx, 0x1F5
+    mov eax, ebx
+    shr eax, 16
+    ; Finsihed sending upper 16 bits of LBA
+
+    mov dx, 0x1f7
+    mov al, 0x20
+    out dx, al
+
+    ; Read all sectors into memory
+.next_sector:
+    push ecx
+
+
+; Checking if we need to read
+.try_again:
+    mov dx, 0x1f7
+    in al, dx
+    test al, 8
+    jz .try_again
+
+; We need to read 256 words at a time
+    mov ecx, 256
+    mov dx, 0x1F0
+    rep insw     ; Reads 256 words
+    pop ecx
+    Loop .next_sector
+    ret
+
 
 times 510- ($ - $$) db 0 ; This fills the first 510 bytes with 0 or the content to make a sector
 ; Line above will fill the 510 bytes with data if nothing and pad with 0

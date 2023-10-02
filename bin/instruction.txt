@@ -1,0 +1,21 @@
+ndisasm ./kernel.bin give syou asm of the .o file. 
+
+
+make clean
+./build.sh
+cd bin
+qemu-system-x86_64 -hda ./os.bin
+
+gdb
+add-symbol-file ../build/kernelfull.o 0x100000
+
+; shoould see loaded form /build/kernalful
+
+break _start
+
+target remote | qemu-system-x86_64 -S -gdb stdio -hda ./os.bin
+
+c to continue
+
+layout asm ; show th einstructions
+stepi ; step through it

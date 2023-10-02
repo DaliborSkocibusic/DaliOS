@@ -29,3 +29,10 @@ Loads protected mode: 93f3fc81b163062e4c3f2ae5e293efe707a5d04e
 https://github.com/DaliborSkocibusic/DaliOS/tree/93f3fc81b163062e4c3f2ae5e293efe707a5d04e
 
 Loads A20 line: 
+
+Create cc as per https://wiki.osdev.org/GCC_Cross-Compiler
+
+20: Created a cross compiler
+https://wiki.osdev.org/GCC_Cross-Compiler#Binutils
+
+21: seperates it into a kernal and a 32bit mode. 
