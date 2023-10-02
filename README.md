@@ -18,3 +18,7 @@ I more then likely will make many mistakes.
 Please support Daniel if you can, the course is amazing and Daniel realy knows OS / Kernel development
 
 Modify
+
+-------
+Summary of Commits: Loads sector from a txt file. 
+  e6bfdde4d758918e9d136fdd11c2999fc6760cd6
