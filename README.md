@@ -20,6 +20,10 @@ Please support Daniel if you can, the course is amazing and Daniel realy knows O
 Modify
 
 -------
-Summary of Commits: Loads sector from a txt file. 
-  e6bfdde4d758918e9d136fdd11c2999fc6760cd6
+Summary of Commits: 
+
+Loads sector from a txt file. e6bfdde4d758918e9d136fdd11c2999fc6760cd6
 https://github.com/DaliborSkocibusic/DaliOS/tree/e6bfdde4d758918e9d136fdd11c2999fc6760cd6
+
+Loads protected mode: 93f3fc81b163062e4c3f2ae5e293efe707a5d04e
+https://github.com/DaliborSkocibusic/DaliOS/tree/93f3fc81b163062e4c3f2ae5e293efe707a5d04e
